@@ -1,17 +1,17 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from '../services/auth-service';
+import { AuthService } from '../auth/auth-service';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { firstValueFrom, filter } from 'rxjs';
 
 export const guestGuard: CanActivateFn = async (route, state) => {
-  const auth = inject(AuthService);
+  const authService = inject(AuthService);
   const router = inject(Router);
-  const loading$ = toObservable(auth.loading);
+  const loading$ = toObservable(authService.loading);
 
   await firstValueFrom(loading$.pipe(filter(isLoading => isLoading === false)));
 
-  if (auth.isLoggedIn) {
+  if (authService.isLoggedIn) {
     router.navigate(['/chat']);
     return false;
   }
