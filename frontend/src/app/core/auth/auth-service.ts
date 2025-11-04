@@ -49,7 +49,13 @@ export class AuthService {
   }
 
   async signUp(email: string, password: string) {
-    const { data, error } = await this.supabase.auth.signUp({ email, password });
+    const { data, error } = await this.supabase.auth.signUp({
+      email, 
+      password, 
+      options: {
+        emailRedirectTo: 'https://agridrone-chatbot.vercel.app/chat'
+      }
+    });
     return { data, error };
   }
 }
