@@ -46,23 +46,30 @@ export class Register {
 
     try {
       const { data, error } = await this.authService.signUp(email!, password!);
+
       if (error) {
         if (error.message.includes('already registered')) {
-          this.email?.setErrors({ emailTaken: true });
+          if (data?.user && !data.user.email_confirmed_at) {
+            // เคยสมัครแต่ยังไม่ยืนยัน
+            this.serverError = 'อีเมลนี้สมัครไว้แล้ว โปรดยืนยันอีเมลของคุณ';
+          } else {
+            this.email?.setErrors({ emailTaken: true });
+          }
         } else if (error.message.includes('invalid email')) {
           this.email?.setErrors({ invalid: true });
         } else {
           this.serverError = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
         }
-        return;
+      } else {
+        // สมัครสำเร็จครั้งแรก
+        this.serverError = 'กรุณายืนยันอีเมลของคุณ';
       }
 
+      // redirect ไป verify ทั้งสองกรณีที่ต้องยืนยัน
       if (data?.user && !data.user.email_confirmed_at) {
-        this.serverError = 'อีเมลนี้สมัครไว้แล้ว โปรดยืนยันอีเมลของคุณ';
-        return;
+        this.router.navigate(['/verify']);
       }
 
-      this.router.navigate(['/verify']);
     } catch (error) {
       console.error(error);
       this.serverError = 'เกิดข้อผิดพลาดในการเชื่อมต่อ';
