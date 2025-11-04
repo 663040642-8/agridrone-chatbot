@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "prebuild": "node set-env.js", 
+    "deploy:prod": "npm run prebuild && ng build --configuration=production"
   },
   "prettier": {
     "printWidth": 100,
