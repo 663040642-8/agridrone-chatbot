@@ -15,7 +15,7 @@ export const routes: Routes = [
         path: '',
         component: MainLayout,
         children: [
-            { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+            { path: '', redirectTo: 'home', pathMatch: 'full' },
             {
                 path: 'chat',
                 component: Chat
