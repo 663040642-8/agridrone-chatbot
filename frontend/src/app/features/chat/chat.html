@@ -1,0 +1,56 @@
+<div class="flex-1 flex flex-col h-full bg-gray-50">
+    <div #messageContainer class="flex-1 overflow-y-auto p-6 space-y-4">
+        @if (currentChatHistory.length === 0) {
+        @if (!isCreatingNewChat) { <div class="flex flex-col items-center justify-center h-full text-gray-400">
+            <p class="text-xl">Chatbot พร้อมให้ความช่วยเหลือเสมอ</p>
+            <p>เริ่มถามคำถามของคุณได้เลย</p>
+        </div>
+        } @else {
+        <div class="flex flex-col items-center justify-center h-full text-gray-400">
+            <p class="text-xl">Chatbot พร้อมให้ความช่วยเหลือเสมอ</p>
+            <p>เริ่มถามคำถามของคุณได้เลย</p>
+        </div>
+        }
+        }
+
+        @for (message of currentChatHistory; track message.created_at) {
+        <div class="flex justify-end">
+            <div class="p-3 text-white bg-green-600 rounded-lg max-w-[75%]">
+                {{ message.query }}
+            </div>
+        </div>
+
+        @if (message.answer) {
+        <div class="flex justify-start">
+            <div class="p-3 bg-gray-100 rounded-lg max-w-[75%]">
+                <div class="prose prose-sm" [innerHTML]="message.answer"></div>
+            </div>
+        </div>
+        } @else {
+        <div class="flex justify-start">
+            <div class="bg-gray-100 rounded-lg px-4 py-2">
+                <div class="animate-pulse">กำลังโหลด...</div>
+            </div>
+        </div>
+        }
+        }
+    </div>
+
+    <div class="p-4 bg-white border-t border-gray-200">
+        <form class="flex gap-2" (submit)="$event.preventDefault()">
+            <textarea [formControl]="newMessageText" placeholder="พิมพ์คำถามของคุณที่นี่..." rows="1"
+                class="placeholder-gray-400 flex-1 min-w-0 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+                (keydown)="handleEnter($event)"></textarea>
+
+            <button type="button" (click)="sendMessage()" [disabled]="!newMessageText.value?.trim()"
+                class="p-3 text-white bg-green-600 rounded-lg disabled:bg-gray-400 enabled:hover:bg-green-700">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                </svg>
+            </button>
+        </form>
+    </div>
+
+</div>

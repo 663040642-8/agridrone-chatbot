@@ -1,0 +1,107 @@
+<aside class="flex flex-col h-screen bg-emerald-700 text-white fixed top-0 left-0 z-40
+         pt-4 pb-4 pl-4 transition-all duration-300 overflow-hidden -translate-x-full md:translate-x-0" [ngClass]="{
+             'translate-x-0': !isCollapsed, 
+             'md:w-16': isCollapsed,
+             'md:w-52': !isCollapsed
+         }">
+
+    <!-- โลโก้ -->
+    <div class="flex items-center justify-between border-b border-emerald-600 pb-4 mr-4 mb-4 h-20 shrink-0">
+        @if (!isCollapsed) {
+        <span class="text-2xl font-medium tracking-tight leading-tight">
+            Chatbot<br>โดรนเกษตร
+        </span>
+        }
+        <!-- ปุ่ม Toggle -->
+        <button (click)="toggleSidebar()"
+            class="text-white hover:text-emerald-300 transition flex items-center justify-center w-8 h-8">
+            <svg [ngClass]="{ 'rotate-180': isCollapsed }" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 transition-transform duration-300"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 6L6 12L18 18" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- ปุ่มแชทใหม่ -->
+    <div class="pr-4">
+        <button type="button" (click)="onNewChat()"
+            class="flex items-center w-full px-2 py-2 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-emerald-600 text-white"
+            [ngClass]="{
+                'justify-center px-0': isCollapsed,
+                'justify-start px-2': !isCollapsed
+            }">
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" [ngClass]="{
+                    'mr-2': !isCollapsed,
+                    'mr-0': isCollapsed
+                }">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+            </svg>
+
+            @if (!isCollapsed) {
+            <span class="truncate">แชทใหม่</span>
+            }
+        </button>
+    </div>
+
+    <!-- รายการแชท -->
+    <div class="flex-1 mt-2 space-y-1 overflow-y-auto pr-4 custom-scrollbar">
+        @if (!isCollapsed) {
+        @for (convo of conversations; track convo.conversationId) {
+        <div (click)="onSelectConversation(convo.conversationId)"
+            [class.bg-emerald-600]="selectedConversationId === convo.conversationId"
+            class="flex items-center justify-between px-2.5 py-1.5 text-sm text-emerald-100 rounded-lg transition-colors duration-200 hover:bg-emerald-600 cursor-pointer group">
+            <span class="flex-1 truncate" [title]="convo.lastMessage">
+                @if (!isCollapsed) {
+                {{ convo.lastMessage.length > 30 ? (convo.lastMessage | slice:0:30) + '...' : convo.lastMessage ||
+                'แชทใหม่'
+                }}
+                }
+            </span>
+
+            @if (!isCollapsed) {
+            <button (click)="onDeleteConversation($event, convo.conversationId)"
+                class="opacity-0 group-hover:opacity-100 text-red-300 hover:text-red-500 ml-2 shrink-0 p-1 transition-opacity duration-200"
+                title="ลบการสนทนา">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m14.74 9-.346 9m-4.788 0L9.26 9M4.78 5.862l1.06 13.811a2.25 2.25 0 002.244 2.077h7.832a2.25 2.25 0 002.244-2.077l1.06-13.811M9 7.5V5.25m6 2.25V5.25m-9 2.25h12.75" />
+                </svg>
+            </button>
+            }
+        </div>
+
+        } @empty {
+        <p class="px-2.5 py-1.5 text-sm text-emerald-300">
+            ยังไม่มีประวัติแชท
+        </p>
+        }
+        }
+    </div>
+
+    <!-- ปุ่มออกจากระบบ -->
+    <div class="pt-2 border-t border-emerald-600 pr-4">
+        <button (click)="authService.signOut()" type="button"
+            class="flex items-center w-full px-2 py-2 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-emerald-600 text-white"
+            [ngClass]="{
+            'justify-center px-0': isCollapsed,
+            'justify-start px-2': !isCollapsed
+            }">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-5 h-5 shrink-0 transition-all" [ngClass]="{
+                    'mr-0': isCollapsed,
+                    'mr-2': !isCollapsed
+                }">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75" />
+            </svg>
+
+            @if (!isCollapsed) {
+            <span>ออกจากระบบ</span>
+            }
+        </button>
+    </div>
+
+</aside>

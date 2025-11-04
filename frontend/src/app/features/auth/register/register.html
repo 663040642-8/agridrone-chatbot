@@ -1,0 +1,84 @@
+<div class="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-6">
+    <div class="bg-white text-gray-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+        <form class="p-8 space-y-6" [formGroup]="registerForm" (submit)="register()">
+            <h1 class="text-center text-3xl font-extrabold text-emerald-700">สมัครสมาชิก</h1>
+            <p class="text-center text-sm text-gray-500">กรุณากรอกรายละเอียดเพื่อสร้างบัญชีใหม่</p>
+
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium mb-1">อีเมล</label>
+                <input type="email" id="email" formControlName="email"
+                    class="placeholder-gray-400 w-full pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    placeholder="example@gmail.com" />
+                <!-- 🧠 แสดง error เมื่อ submit แล้ว -->
+                @if (submitted && registerForm.get('email')?.hasError('required')) {
+                <p class="text-red-500 text-sm mt-1">
+                    กรุณากรอกอีเมล
+                </p>
+                }
+                @if (submitted && registerForm.get('email')?.hasError('email')) {
+                <p class="text-red-500 text-sm mt-1">
+                    กรุณากรอกอีเมลให้ถูกต้อง
+                </p>
+                }
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label for="password" class="block text-sm font-medium mb-1">รหัสผ่าน</label>
+                <input type="password" id="password" formControlName="password"
+                    class="placeholder-gray-400 w-full pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    placeholder="รหัสผ่าน" />
+                @if (submitted && registerForm.get('password')?.hasError('required')) {
+                <p class="text-red-500 text-sm mt-1">
+                    กรุณากรอกรหัสผ่าน
+                </p>
+                }
+                @if (submitted && registerForm.get('password')?.hasError('minlength')) {
+                <p class="text-red-500 text-sm mt-1">
+                    รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร
+                </p>
+                }
+            </div>
+
+            <!-- Confirm Password -->
+            <div>
+                <label for="confirmPassword" class="block text-sm font-medium mb-1">ยืนยันรหัสผ่าน</label>
+                <input type="password" id="confirmPassword" formControlName="confirmPassword"
+                    class="placeholder-gray-400 w-full pl-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    placeholder="ยืนยันรหัสผ่าน" />
+                @if (submitted && registerForm.get('confirmPassword')?.hasError('required')) {
+                <p class="text-red-500 text-sm mt-1">
+                    กรุณายืนยันรหัสผ่าน
+                </p>
+                } @else if (submitted && registerForm.hasError('passwordMismatch')) {
+                <p class="text-red-500 text-sm mt-1">
+                    รหัสผ่านไม่ตรงกัน
+                </p>
+                }
+            </div>
+
+            <!-- Server error (กรณีอื่น ๆ ที่ไม่ระบุฟิลด์) -->
+            @if (serverError) {
+            <p class="text-red-500 text-sm mt-2 text-center">{{ serverError }}</p>
+            }
+
+            <!-- Submit -->
+            <button type="submit"
+                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-50"
+                [disabled]="loading()">
+                @if (!loading()) {
+                <span>สมัครสมาชิก</span>
+                } @else {
+                <span>กำลังสมัครสมาชิก...</span>
+                }
+            </button>
+
+            <p class="text-center text-gray-500 text-sm">
+                มีบัญชีอยู่แล้ว?
+                <a [routerLink]="['/login']"
+                    class="text-emerald-600 hover:text-emerald-700 font-semibold">เข้าสู่ระบบ</a>
+            </p>
+        </form>
+    </div>
+</div>
