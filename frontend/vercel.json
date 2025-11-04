@@ -3,10 +3,8 @@
   "builds": [
     { "src": "package.json", "use": "@vercel/static-build" }
   ],
-  "buildCommand": "npm run build",
   "outputDirectory": "dist/frontend/browser",
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/.*", "dest": "/index.html" }
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
