@@ -3,12 +3,13 @@ import { Login } from './features/auth/login/login';
 import { Register } from './features/auth/register/register';
 import { Verify } from './features/auth/verify/verify';
 import { Chat } from './features/chat/chat';
-import { Welcome } from './features/welcome/welcome'; 
+import { Welcome } from './features/welcome/welcome';
 import { MainLayout } from './layouts/main-layout/main-layout';
+import { guestGuard } from './core/guards/guest-guard';
 
 export const routes: Routes = [
-    { path: 'login', component: Login },
-    { path: 'register', component: Register },
+    { path: 'login', component: Login, canActivate: [guestGuard] },
+    { path: 'register', component: Register, canActivate: [guestGuard] },
     { path: 'verify', component: Verify },
     { path: 'home', component: Welcome },
     {
@@ -16,10 +17,8 @@ export const routes: Routes = [
         component: MainLayout,
         children: [
             { path: '', redirectTo: 'home', pathMatch: 'full' },
-            {
-                path: 'chat',
-                component: Chat
-            },
+            { path: 'chat', component: Chat },
         ]
     },
+    { path: '**', redirectTo: 'home', pathMatch: 'full' }
 ];
