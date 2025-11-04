@@ -10,7 +10,6 @@ export class SupabaseService implements OnModuleInit {
       process.env.SUPABASE_URL!,
       process.env.SUPABASE_KEY!,
     );
-    console.log('✅ Supabase connected');
   }
 
   getClient(): SupabaseClient {
