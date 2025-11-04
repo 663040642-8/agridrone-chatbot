@@ -115,15 +115,24 @@ export class ChatService {
   }
 
   private buildPrompt(query: string, context: string, conversationContext: string): string {
-    return `คุณคือผู้เชี่ยวชาญด้านโดรนการเกษตรและสารเคมีกำจัดศัตรูพืช
+    return `คุณคือผู้เชี่ยวชาญด้านโดรนเกษตรและสารเคมีกำจัดศัตรูพืช
+      ใช้ข้อมูลจาก [ฐานความรู้] เท่านั้นในการตอบ
+      หากข้อมูลไม่เพียงพอ ให้ตอบว่า "ไม่พบข้อมูลที่เกี่ยวข้อง"
 
-${conversationContext ? `[บริบทการสนทนา]\n${conversationContext}\n\n` : ''}[คำถาม]
-${query}
+      [บริบทการสนทนา]
+      ${conversationContext}
 
-[ข้อมูลจากฐานความรู้]
-${context}
+      [คำถาม]
+      ${query}
 
-ตอบเป็นภาษาไทยอย่างชัดเจน:`;
+      [ข้อมูลจากฐานความรู้]
+      ${context}
+
+      ตอบเป็นภาษาไทย:
+      - กระชับและชัดเจน
+      - ใช้ bullet point ถ้าเหมาะสม
+      - อ้างอิงเอกสารด้วย [เอกสาร X] ตามที่มีใน context
+    `;
   }
 
   private async generateAnswer(prompt: string): Promise<string> {
